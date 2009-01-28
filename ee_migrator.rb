@@ -5,7 +5,7 @@
 # Name   : ExpressionEngine Migrator
 # Version: 1.1
 # Author : Stephen Rushe
-# URL    : http://github.com/srushe/expression-engine-migrator
+# URL    : http://github.com/srushe/expression-engine-migrator.ee_addon
 #
 # This work is licensed under the Creative Commons Attribution-Share
 # Alike 3.0 Unported License. To view a copy of this license, visit
