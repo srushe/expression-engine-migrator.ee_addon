@@ -1,3 +1,8 @@
+1.2  2009-03-19
+
+  * Made the check for INSERT INTO case-insensitive.
+      Thanks to Wes Baker for the report.
+
 1.1  2009-01-27
 
   * Move to github

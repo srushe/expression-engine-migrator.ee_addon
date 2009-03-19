@@ -3,7 +3,7 @@
 # ---------------------------------------------------------------------
 #
 # Name   : ExpressionEngine Migrator
-# Version: 1.1
+# Version: 1.2
 # Author : Stephen Rushe
 # URL    : http://github.com/srushe/expression-engine-migrator.ee_addon
 #
@@ -140,7 +140,7 @@ while (line = db_file.gets)
   # -------------------------------------------------------------------
   # Skip unless it's an INSERT.
   # -------------------------------------------------------------------
-  unless /^INSERT INTO /.match(line)
+  unless /^INSERT INTO /i.match(line)
     puts line
     next
   end
@@ -149,35 +149,35 @@ while (line = db_file.gets)
   # Leave out certain lines unless we're keeping all data.
   # -------------------------------------------------------------------
   unless options[:all_data]
-    next if /^INSERT INTO `?#{table_prefix}_captcha`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_cp_log`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_email_cache(|_mg|_ml)`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_email_console_cache`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_email_tracker`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_freeform_entries`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_freeform_params`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_mailing_list`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_mailing_list_queue`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_message_attachments`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_message_copies`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_message_data`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_message_listed`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_password_lockout`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_referrers`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_reset_password`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_search`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_search_log`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_security_hashes`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_sessions`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_throttle`?/.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_trackbacks`?/.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_captcha`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_cp_log`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_email_cache(|_mg|_ml)`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_email_console_cache`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_email_tracker`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_freeform_entries`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_freeform_params`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_mailing_list`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_mailing_list_queue`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_message_attachments`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_message_copies`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_message_data`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_message_listed`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_password_lockout`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_referrers`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_reset_password`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_search`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_search_log`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_security_hashes`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_sessions`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_throttle`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_trackbacks`?/i.match(line)
   end
   
   # -------------------------------------------------------------------
   # If we're dealing with an INSERT into a table which uses serialised
   # data then we need to perform some recalculation of the offset.
   # -------------------------------------------------------------------
-  if /^INSERT INTO `?#{table_prefix}_(extensions|relationships|sites)`?/.match(line)
+  if /^INSERT INTO `?#{table_prefix}_(extensions|relationships|sites)`?/i.match(line)
     
     # -----------------------------------------------------------------
     # Replace the domain name if it has changed.
@@ -196,7 +196,7 @@ while (line = db_file.gets)
     end
 
     if (current_domain and (current_domain != new_domain))
-      while matches = /(\}|;)s:(\d+):\\"http:\/\/#{current_domain}(.*?)\\";/.match(line)
+      while matches = /(\}|;)s:(\d+):\\"http:\/\/#{current_domain}(.*?)\\";/i.match(line)
         full_match      = matches[0]
         start_char      = matches[1]
         characters      = matches[2]
