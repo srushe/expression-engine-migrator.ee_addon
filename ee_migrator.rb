@@ -3,7 +3,7 @@
 # ---------------------------------------------------------------------
 #
 # Name   : ExpressionEngine Migrator
-# Version: 1.2
+# Version: 1.4
 # Author : Stephen Rushe
 # URL    : http://github.com/srushe/expression-engine-migrator.ee_addon
 #
@@ -82,15 +82,18 @@ unless options[:table_prefix]
 end
 
 # ---------------------------------------------------------------------
-# The web directories *must* be provided with starting slashes. We'll
-# add trailing ones if required though.
+# The web directories *must* be provided with starting slashes, unless
+# they're empty. We'll add trailing ones if required though.
 # ---------------------------------------------------------------------
 [ :current_path, :new_path ].each do |opt|
-  unless /^\//.match(options[opt])
-    valid_parameters = false
-    $stderr.puts "The option --#{opt} must have a leading slash"
+  if options[opt]
+    unless /^\//.match(options[opt])
+      valid_parameters = false
+      $stderr.puts "The option --#{opt} must have a leading slash"
+    end
+    print "#{opt} => #{options[opt]}\n"
+    options[opt] << '/' unless /\/$/.match(options[opt])
   end
-  options[opt] << '/' unless /\/$/.match(options[opt])
 end
 exit unless valid_parameters
 
@@ -156,7 +159,7 @@ while (line = db_file.gets)
     next if /^INSERT INTO `?#{table_prefix}_email_tracker`?/i.match(line)
     next if /^INSERT INTO `?#{table_prefix}_freeform_entries`?/i.match(line)
     next if /^INSERT INTO `?#{table_prefix}_freeform_params`?/i.match(line)
-    next if /^INSERT INTO `?#{table_prefix}_mailing_list`?/i.match(line)
+    next if /^INSERT INTO `?#{table_prefix}_mailing_list`? /i.match(line)
     next if /^INSERT INTO `?#{table_prefix}_mailing_list_queue`?/i.match(line)
     next if /^INSERT INTO `?#{table_prefix}_message_attachments`?/i.match(line)
     next if /^INSERT INTO `?#{table_prefix}_message_copies`?/i.match(line)
@@ -196,14 +199,25 @@ while (line = db_file.gets)
     end
 
     if (current_domain and (current_domain != new_domain))
-      while matches = /(\}|;)s:(\d+):\\"http:\/\/#{current_domain}(.*?)\\";/i.match(line)
+      # ---------------------------------------------------------------
+      # What string should we check for when looking for the current
+      # domain?
+      # ---------------------------------------------------------------
+      current_domain_re = /^http:\/\//.match(current_domain) ? Regexp.new(/#{current_domain}/) : Regexp.new(/http:\/\/#{current_domain}/)
+
+      # ---------------------------------------------------------------
+      # What string should we replace the current domain with?
+      # ---------------------------------------------------------------
+      new_domain_string = /^http:\/\//.match(new_domain) ? new_domain : "http://#{new_domain}"
+                                     
+      while matches = /(\}|;)s:(\d+):\\"#{current_domain_re}(.*?)\\";/i.match(line)
         full_match      = matches[0]
         start_char      = matches[1]
         characters      = matches[2]
         post_domain_str = matches[3]
         
         replacement_string  = "#{start_char}s:#{characters.to_i + new_domain.length - current_domain.length}:"
-        replacement_string << "\\\"http://#{new_domain}#{post_domain_str}\\\";"
+        replacement_string << "\\\"#{new_domain_string}#{post_domain_str}\\\";"
         line.gsub!(/#{Regexp.escape(full_match)}/, replacement_string)
       end
     end

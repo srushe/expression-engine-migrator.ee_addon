@@ -51,9 +51,9 @@ The parameters the scripts takes are...
 
   -a, --all_data
       Keep all data from the initial dump. By default the script ignores
-      a number of tables which should not be copied from a development,
-      such as control panel logs and email caches. The --all_data allows
-      all data to be copied, unsurprisingly.
+      a number of tables which should not be copied from a development
+      setup, such as control panel logs and email caches. The --all_data
+      allows all data to be copied, unsurprisingly.
 
   -c, --current_domain <OLD DOMAIN>
       The domain being moved from. In the example above it would be
