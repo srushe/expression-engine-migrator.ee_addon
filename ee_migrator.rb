@@ -3,7 +3,7 @@
 # ---------------------------------------------------------------------
 #
 # Name   : ExpressionEngine Migrator
-# Version: 1.4
+# Version: 1.5
 # Author : Stephen Rushe
 # URL    : http://github.com/srushe/expression-engine-migrator.ee_addon
 #
@@ -91,7 +91,6 @@ end
       valid_parameters = false
       $stderr.puts "The option --#{opt} must have a leading slash"
     end
-    print "#{opt} => #{options[opt]}\n"
     options[opt] << '/' unless /\/$/.match(options[opt])
   end
 end
